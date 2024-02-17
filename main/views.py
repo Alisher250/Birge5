@@ -18,6 +18,7 @@ from pywebio import start_server
 from pywebio.input import input, FLOAT
 from pywebio.output import put_text
 import asyncio
+from django.template import RequestContext
 
 from pywebio.input import *
 from pywebio.output import *
@@ -324,6 +325,7 @@ def ar(request):
     return render(request, 'main/ar.html', context)
 
 def loginsystem(request):
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
