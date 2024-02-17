@@ -124,7 +124,6 @@ nest-asyncio==1.5.6
 networkx==3.1
 num2rus==0.0.8.3
 num2words==0.5.12
-numpy==1.26.1
 oauthlib==3.2.2
 omegaconf==2.3.0
 onnxruntime==1.14.0
