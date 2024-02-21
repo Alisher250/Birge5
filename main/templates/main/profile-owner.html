@@ -192,6 +192,71 @@
   <p>{{ response }}</p>
   {% endif %}
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<body>
+  <canvas id="myChart" width="400" height="400"></canvas>
 
+  <script>
+    // Data fetched from Django view and parsed
+    const data = JSON.parse('{"happy": [{"time": "2024-02-20T15:36:45.056563Z", "value": 11}, {"time": "2024-02-20T15:36:46.056563Z", "value": 7}], "anger": [{"time": "2024-02-20T15:36:45.056563Z", "value": 1}, {"time": "2024-02-20T15:36:46.056563Z", "value": 5}]}');
 
+    // Extract emotions and their data from the parsed JSON
+    const emotions = Object.keys(data);
+    const datasets = emotions.map(emotion => {
+      const emotionData = data[emotion];
+      return {
+        label: emotion,
+        fill: false,
+        lineTension: 0,
+        backgroundColor: getRandomColor(),
+        borderColor: getRandomColor(),
+        data: emotionData.map(entry => ({ x: entry.time, y: emotion }))
+      };
+    });
+
+    // Render chart with fetched data
+    renderChart(datasets);
+
+    function renderChart(datasets) {
+      new Chart("myChart", {
+        type: "line",
+        data: {
+          datasets: datasets
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'second'
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Time'
+              }
+            }],
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Emotions'
+              },
+              ticks: {
+                reverse: true
+              }
+            }]
+          }
+        }
+      });
+    }
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+  </script>
+</body>
 {% endblock %}

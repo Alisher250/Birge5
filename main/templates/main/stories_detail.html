@@ -242,6 +242,7 @@
 					{% else %}
 						<p>No comments for this story</p>
 					{% endif %}
+					{% if allow_comment %}
 					<form class="comment-form" action="{% url 'story_detail' story.id %}" method="post">
 						{% csrf_token %}
 						<div class="form-group">
@@ -250,6 +251,9 @@
 						</div>
 						<button class="button" type="submit">Submit</button>
 					</form>
+					{% else %}
+						<p>You need to sign in to comment on this story.</p>
+					{% endif %}
 				</div>
 				
 			</div>

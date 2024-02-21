@@ -24,6 +24,7 @@ from pywebio.input import *
 from pywebio.output import *
 from pywebio.session import defer_call, info as session_info, run_async, run_js
 from threading import Thread
+from django.core.serializers import serialize
 
 chat_msgs = []
 online_users = set()
@@ -93,7 +94,7 @@ def meetings(request):
     return render(request, 'main/meetings.html')
 
 def chatgpt_api(prompt):
-    openai.api_key =  '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'
+    openai.api_key =  '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'
 
     response = openai.Completion.create(
             engine="gpt-3.5-turbo-instruct",
@@ -119,11 +120,23 @@ def profileo(request):
     if request.method == 'POST':
         content = request.POST.get('content')
         response = chatgpt_api(content)
+
+    emotions = [
+        'happy', 'anger', 'contempt', 'disgust', 'fear',
+        'neutral', 'sad', 'surprise'
+    ]
     
+    data = {}
+    for emotion in emotions:
+        qs = Statistics.objects.values_list('timeof{}'.format(emotion), 'numberof{}'.format(emotion))
+        serialized = [{'time': entry[0].isoformat(), 'value': entry[1]} for entry in qs]
+        data[emotion] = serialized
+
     context = {
         'user': user,
         'response': response,
         'userprofile': userprofile,
+        'data': data,
     }
 
     return render(request, 'main/profile-owner.html', context)
@@ -316,8 +329,12 @@ def story_detail(request, story_id):
         'comments': comments,
         'selected_hobbies': selected_hobbies,
         'story_id': story_id,
+        'allow_comment': True,
     }
     
+    if not request.user.is_authenticated:
+        context['allow_comment'] = False
+
     return render(request, 'main/stories_detail.html', context)
 
 def ar(request):

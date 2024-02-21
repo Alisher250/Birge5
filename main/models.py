@@ -51,7 +51,7 @@ class Statistics(models.Model):
     numberofdisgust = models.IntegerField()
     timeofdisgust = models.DateTimeField(auto_now_add=True, blank=True)
     numberoffear = models.IntegerField()
-    timeofear = models.DateTimeField(auto_now_add=True, blank=True)
+    timeoffear = models.DateTimeField(auto_now_add=True, blank=True)
     numberofneutral = models.IntegerField()
     timeofneutral = models.DateTimeField(auto_now_add=True, blank=True)
     numberofsad = models.IntegerField()
