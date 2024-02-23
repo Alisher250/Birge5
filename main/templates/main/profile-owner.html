@@ -194,61 +194,25 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <body>
-  <canvas id="myChart" width="400" height="400"></canvas>
+  <canvas id="myChart" width="1000" height="400"></canvas>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
   <script>
-    // Data fetched from Django view and parsed
-    const data = JSON.parse('{"happy": [{"time": "2024-02-20T15:36:45.056563Z", "value": 11}, {"time": "2024-02-20T15:36:46.056563Z", "value": 7}], "anger": [{"time": "2024-02-20T15:36:45.056563Z", "value": 1}, {"time": "2024-02-20T15:36:46.056563Z", "value": 5}]}');
-
-    // Extract emotions and their data from the parsed JSON
-    const emotions = Object.keys(data);
-    const datasets = emotions.map(emotion => {
-      const emotionData = data[emotion];
-      return {
-        label: emotion,
-        fill: false,
-        lineTension: 0,
-        backgroundColor: getRandomColor(),
-        borderColor: getRandomColor(),
-        data: emotionData.map(entry => ({ x: entry.time, y: emotion }))
-      };
-    });
-
-    // Render chart with fetched data
-    renderChart(datasets);
-
-    function renderChart(datasets) {
-      new Chart("myChart", {
-        type: "line",
-        data: {
-          datasets: datasets
-        },
-        options: {
-          scales: {
-            xAxes: [{
-              type: 'time',
-              time: {
-                unit: 'second'
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Time'
-              }
-            }],
-            yAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: 'Emotions'
-              },
-              ticks: {
-                reverse: true
-              }
-            }]
-          }
-        }
-      });
+    // Function to generate random data points
+    function generateRandomData() {
+      let data = [];
+      for (let i = 0; i < 10; i++) {
+        // Generate data points with random X and Y values
+        data.push({
+          x: Math.random() * 10, // Random X value between 0 and 10
+          y: Math.random() * 100 // Random Y value between 0 and 100
+        });
+      }
+      return data.sort((a, b) => a.x - b.x); // Sort data by X value to make the line chart more coherent
     }
-
+  
+    // Function to get a random color
     function getRandomColor() {
       const letters = '0123456789ABCDEF';
       let color = '#';
@@ -257,6 +221,48 @@
       }
       return color;
     }
+  
+    // Rendering the chart
+    function renderChart(datasets) {
+      new Chart("myChart", {
+        type: 'scatter', // Use a scatter chart type to allow for random X values
+        data: {
+          datasets: datasets
+        },
+        options: {
+          scales: {
+            xAxes: [{ 
+              type: 'linear', // Define X axis as linear
+              position: 'bottom',
+              scaleLabel: {
+                display: true,
+                labelString: 'X Value'
+              }
+            }],
+            yAxes: [{ // Define Y axis
+              scaleLabel: {
+                display: true,
+                labelString: 'Y Value'
+              }
+            }]
+          }
+        }
+      });
+    }
+  
+    // Data preparation
+    const datasets = [{
+      label: 'Random Data',
+      fill: false,
+      backgroundColor: getRandomColor(),
+      borderColor: getRandomColor(),
+      data: generateRandomData(),
+      showLine: true // Connect points with a line
+    }];
+  
+    // Call function to render the chart
+    renderChart(datasets);
   </script>
+  
 </body>
 {% endblock %}
