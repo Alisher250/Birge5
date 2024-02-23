@@ -94,7 +94,7 @@ def meetings(request):
     return render(request, 'main/meetings.html')
 
 def chatgpt_api(prompt):
-    openai.api_key =  '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'
+    openai.api_key =  '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'
 
     response = openai.Completion.create(
             engine="gpt-3.5-turbo-instruct",
